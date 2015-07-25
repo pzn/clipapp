@@ -7,15 +7,15 @@ spring:
   profiles:
     active: simple
   jpa:
-    database-platform: org.hibernate.dialect.HSQLDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
   datasource:
-    platform: hsqldb
-    url: jdbc:hsqldb:file:/tmp/clipappdb
-    username: sa
-    password: sa
-    driver-class-name: org.hsqldb.jdbcDriver
+    platform: postgresql
+    url: jdbc:postgresql://localhost:5432/clipapp
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
 logging:
   level:
     org:
