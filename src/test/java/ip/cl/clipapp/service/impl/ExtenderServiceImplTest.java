@@ -4,8 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import ip.cl.clipapp.Application;
 import ip.cl.clipapp.ClipAppException;
-import ip.cl.clipapp.service.impl.ExtenderServiceImpl;
-import ip.cl.clipapp.service.impl.ShortenerServiceImpl;
+import ip.cl.clipapp.service.ExtenderService;
+import ip.cl.clipapp.service.ShortenerService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,9 +21,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class ExtenderServiceImplTest {
 
     @Autowired
-    private ShortenerServiceImpl    shortenerService;
+    private ShortenerService    shortenerService;
     @Autowired
-    private ExtenderServiceImpl     extenderService;
+    private ExtenderService     extenderService;
 
     private static final String GOOGLE_COM       = "http://www.google.com";
     private static final String GOOGLE_COM_SHORT = "b";

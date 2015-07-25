@@ -3,7 +3,7 @@ package ip.cl.clipapp.service.impl;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import ip.cl.clipapp.Application;
-import ip.cl.clipapp.service.impl.ClipEncoderServiceImpl;
+import ip.cl.clipapp.service.ClipEncoderService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class ClipEncoderServiceImplTest {
 
     @Autowired
-    private ClipEncoderServiceImpl clipEncoderService;
+    private ClipEncoderService clipEncoderService;
 
     @Test
     public void encode() {

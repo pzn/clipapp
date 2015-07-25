@@ -4,7 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import ip.cl.clipapp.Application;
 import ip.cl.clipapp.ClipAppRuntimeException;
-import ip.cl.clipapp.service.impl.ShortenerServiceImpl;
+import ip.cl.clipapp.service.ShortenerService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ public class ShortenerServiceImplTest {
     private static final String DRUNK_URL        = "grroL..qqqq,fiifkw,xim";
 
     @Autowired
-    private ShortenerServiceImpl    shortenerService;
+    private ShortenerService    shortenerService;
 
     @Test
     public void shorten() {

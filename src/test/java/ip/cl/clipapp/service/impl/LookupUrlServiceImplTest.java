@@ -5,7 +5,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import ip.cl.clipapp.Application;
-import ip.cl.clipapp.service.impl.SimpleLookupUrlServiceImpl;
+import ip.cl.clipapp.ClipAppProfile;
+import ip.cl.clipapp.service.LookupUrlService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+@ActiveProfiles({ ClipAppProfile.SIMPLE })
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -26,7 +29,7 @@ public class LookupUrlServiceImplTest {
     private static final String GOOGLE_CA_SHORT  = "c";
 
     @Autowired
-    private SimpleLookupUrlServiceImpl    lookupUrlService;
+    private LookupUrlService    lookupUrlService;
 
     @Test
     public void getOrAddLongUrl() {
