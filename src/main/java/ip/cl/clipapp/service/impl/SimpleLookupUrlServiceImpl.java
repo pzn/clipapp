@@ -1,5 +1,6 @@
 package ip.cl.clipapp.service.impl;
 
+import ip.cl.clipapp.service.ClipEncoderService;
 import ip.cl.clipapp.service.LookupUrlService;
 
 import java.util.Map;
@@ -17,7 +18,7 @@ public class SimpleLookupUrlServiceImpl implements LookupUrlService {
     private Map<Integer, String> urlMap  = new ConcurrentHashMap<>();
 
     @Autowired
-    private ClipEncoderServiceImpl   clipEncoderService;
+    private ClipEncoderService   clipEncoderService;
 
     @Override
     public String getOrAddLongUrl(String longUrl) {

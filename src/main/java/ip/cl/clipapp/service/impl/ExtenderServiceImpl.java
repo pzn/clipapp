@@ -1,7 +1,9 @@
 package ip.cl.clipapp.service.impl;
 
 import ip.cl.clipapp.ClipAppException;
+import ip.cl.clipapp.service.ClipEncoderService;
 import ip.cl.clipapp.service.ExtenderService;
+import ip.cl.clipapp.service.LookupUrlService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,9 +14,9 @@ import org.springframework.util.StringUtils;
 public class ExtenderServiceImpl implements ExtenderService {
 
     @Autowired
-    private ClipEncoderServiceImpl clipEncoderService;
+    private ClipEncoderService clipEncoderService;
     @Autowired
-    private SimpleLookupUrlServiceImpl   lookupUrlService;
+    private LookupUrlService   lookupUrlService;
 
     @Override
     public String extend(String tinyUrl) throws ClipAppException {
