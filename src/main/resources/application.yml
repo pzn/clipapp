@@ -4,10 +4,21 @@ spring:
     show_banner: false
   mvc:
     locale: en_US
+  profiles:
+    active: simple
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+  datasource:
+    platform: postgresql
+    url: jdbc:postgresql://localhost:5432/clipapp
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
 logging:
   level:
     org:
       springframework: ERROR
     ip:
       cl: ERROR
-    

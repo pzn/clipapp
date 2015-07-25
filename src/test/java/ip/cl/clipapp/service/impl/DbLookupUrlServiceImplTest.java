@@ -17,11 +17,11 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@ActiveProfiles({ ClipAppProfile.SIMPLE })
+@ActiveProfiles({ ClipAppProfile.DATABASE })
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class SimpleLookupUrlServiceImplTest {
+public class DbLookupUrlServiceImplTest {
 
     private static final String GOOGLE_COM       = "http://www.google.com";
     private static final String GOOGLE_COM_SHORT = "b";
