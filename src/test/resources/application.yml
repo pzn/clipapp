@@ -1,0 +1,12 @@
+# http://docs.spring.io/spring-boot/docs/1.2.5.RELEASE/reference/html/common-application-properties.html
+spring:
+  main:
+    show_banner: false
+  mvc:
+    locale: en_US
+logging:
+  level:
+    org:
+      springframework: WARN
+    ip:
+      cl: DEBUG
