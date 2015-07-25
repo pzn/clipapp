@@ -1,10 +1,11 @@
-package ip.cl.clipapp.service;
+package ip.cl.clipapp.service.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import ip.cl.clipapp.Application;
+import ip.cl.clipapp.service.impl.SimpleLookupUrlServiceImpl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class LookupUrlServiceTest {
+public class LookupUrlServiceImplTest {
 
     private static final String GOOGLE_COM       = "http://www.google.com";
     private static final String GOOGLE_COM_SHORT = "b";
@@ -25,7 +26,7 @@ public class LookupUrlServiceTest {
     private static final String GOOGLE_CA_SHORT  = "c";
 
     @Autowired
-    private LookupUrlService    lookupUrlService;
+    private SimpleLookupUrlServiceImpl    lookupUrlService;
 
     @Test
     public void getOrAddLongUrl() {

@@ -1,8 +1,8 @@
 package ip.cl.clipapp.web;
 
 import ip.cl.clipapp.ClipAppException;
-import ip.cl.clipapp.service.ExtenderService;
-import ip.cl.clipapp.service.ShortenerService;
+import ip.cl.clipapp.service.impl.ExtenderServiceImpl;
+import ip.cl.clipapp.service.impl.ShortenerServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClipController {
 
     @Autowired
-    private ShortenerService shortenerService;
+    private ShortenerServiceImpl shortenerService;
     @Autowired
-    private ExtenderService  extenderService;
+    private ExtenderServiceImpl  extenderService;
 
     @RequestMapping(params = "u", method = RequestMethod.GET)
     public String clip(@RequestParam(value = "u") String longUrl) {
