@@ -2,6 +2,10 @@ clipapp
 =======
 [![Build Status](https://travis-ci.org/pzn/clipapp.svg?branch=master)](https://travis-ci.org/pzn/clipapp)
 
+what is it?
+===========
+A simple REST webapp, tinyurl-alike, built with Spring Boot.
+
 live demo
 =========
 http://clipapp.herokuapp.com
@@ -13,7 +17,7 @@ launch it locally?
 ## prerequisites
 - jdk8
 - maven
-- postgresql 9.4.x, with database "clipapp" created
+- postgresql 9.4.x, with database *clipapp* created
 
 ## how to
 - git clone this repository
