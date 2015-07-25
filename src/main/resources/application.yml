@@ -4,10 +4,21 @@ spring:
     show_banner: false
   mvc:
     locale: en_US
+  profiles:
+    active: simple
+  jpa:
+    database-platform: org.hibernate.dialect.HSQLDialect
+    hibernate:
+      ddl-auto: create
+  datasource:
+    platform: hsqldb
+    url: jdbc:hsqldb:file:/tmp/clipappdb
+    username: sa
+    password: sa
+    driver-class-name: org.hsqldb.jdbcDriver
 logging:
   level:
     org:
       springframework: ERROR
     ip:
       cl: ERROR
-    
