@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>cl.ip</title>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css" />
+<link rel="stylesheet" href="://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <h1>clip it easy.</h1>
+            <h4>a simple url shortener</h4>
+        </div>
+        <form>
+            <div class="row">
+                <div class="six columns">
+                    <label for="longUrl" style="text-align: center">Your URL</label>
+                    <input id="longUrl" type="text" class="u-full-width" placeholder="http://www.google.ca" />
+                    <label id="longUrlStatus" style="text-align: center"></label>
+                </div>
+                <div class="six columns">
+                    <label for="tinyUrl" style="text-align: center">Your Clipped URL</label>
+                    <input id="tinyUrl" type="text" class="u-full-width" placeholder="http://..." value="{{tinyUrl}}" />
+                    <label id="tinyUrlStatus" style="text-align: center"></label>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		// clear error messages on key press
+		$('#longUrl').keypress(function(e) {
+			$('#longUrlStatus').text('');
+			$('#tinyUrlStatus').text('');
+		});
+		$('#tinyUrl').keypress(function(e) {
+			$('#longUrlStatus').text('');
+			$('#tinyUrlStatus').text('');
+		});
+
+		// query for tiny url
+		$('#longUrl').change(function(e) {
+			var input = $('#longUrl').val();
+
+			$.ajax({
+				data : {
+					'u' : input
+				},
+				method : 'POST'
+			}).fail(function(data, status, error) {
+				$('#tinyUrlStatus').text('');
+				$('#longUrlStatus').css('color', 'red');
+				$('#longUrlStatus').text('Your URL seems erroneous.');
+			}).done(function(data) {
+				$('#tinyUrlStatus').css('color', 'green');
+				$('#tinyUrlStatus').text('Here you go.');
+				$('#tinyUrl').val(window.location + data);
+			});
+		});
+
+		// query for long url
+		$('#tinyUrl').change(function(e) {
+			var input = $('#tinyUrl').val();
+			input = input.replace(window.location, '');
+
+			$.ajax({
+				url : '/' + input,
+				method : 'POST'
+			}).fail(function(data, status, error) {
+				$('#longUrlStatus').text('');
+				$('#tinyUrlStatus').css('color', 'red');
+				$('#tinyUrlStatus').text('Your tiny url leads to nowhere.');
+			}).done(function(data) {
+				$('#longUrlStatus').css('color', 'green');
+				$('#longUrlStatus').text('Here you go.');
+				$('#longUrl').val(data);
+			});
+		});
+	});
+</script>
+</html>
