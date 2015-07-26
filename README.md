@@ -25,5 +25,4 @@ launch it locally?
 
 improvements
 ============
-- find a way to disable hibernate, when running in "simple mode" (in-memory map, Spring Profile "simple")
 - merge 'hazelcast' branch
