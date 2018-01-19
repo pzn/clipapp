@@ -12,18 +12,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-@Profile(ClipAppProfile.DATABASE)
+import static ip.cl.clipapp.ClipAppProfile.DATABASE;
+
+@Profile(DATABASE)
 @Service
 @Transactional
 public class DbLookupUrlServiceImpl implements LookupUrlService {
 
     @Autowired
-    private ClipEncoderService    clipEncoderService;
+    private ClipEncoderService clipEncoderService;
     @Autowired
     private ClipUrlRepository clipUrlRepository;
 
     @Override
     public String getOrAddLongUrl(String longUrl) {
+
         Integer key = findKey(longUrl);
         if (key == null) {
             String tinyUrl = addLongUrl(longUrl);
@@ -33,6 +36,7 @@ public class DbLookupUrlServiceImpl implements LookupUrlService {
     }
 
     private Integer findKey(String longUrl) {
+
         ClipUrl clipUrl = clipUrlRepository.findByLongUrl(longUrl);
         if (clipUrl == null) {
             return null;
@@ -41,14 +45,16 @@ public class DbLookupUrlServiceImpl implements LookupUrlService {
     }
 
     private String addLongUrl(String longUrl) {
-        ClipUrl hazelcastEntry = new ClipUrl();
-        hazelcastEntry.setLongUrl(longUrl);
-        clipUrlRepository.save(hazelcastEntry);
-        return clipEncoderService.encode(hazelcastEntry.getId());
+
+        ClipUrl clipUrl = new ClipUrl();
+        clipUrl.setLongUrl(longUrl);
+        clipUrlRepository.save(clipUrl);
+        return clipEncoderService.encode(clipUrl.getId());
     }
 
     @Override
     public String getLongUrl(String tinyUrl) {
+
         int key = clipEncoderService.decode(tinyUrl);
         ClipUrl clipUrl = clipUrlRepository.findOne(key);
         if (clipUrl == null) {
@@ -56,5 +62,4 @@ public class DbLookupUrlServiceImpl implements LookupUrlService {
         }
         return clipUrl.getLongUrl();
     }
-
 }

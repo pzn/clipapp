@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 public class ClipEncoderServiceImpl implements ClipEncoderService {
 
     private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static final int    BASE     = ALPHABET.length();
+    private static final int BASE = ALPHABET.length();
 
     @Override
     public String encode(int v) {
+
         StringBuilder sb = new StringBuilder();
         while (v > 0) {
             sb.append(ALPHABET.charAt(v % BASE));
@@ -22,6 +23,7 @@ public class ClipEncoderServiceImpl implements ClipEncoderService {
 
     @Override
     public int decode(String str) {
+
         int v = 0;
         char[] chars = str.toCharArray();
 
@@ -30,5 +32,4 @@ public class ClipEncoderServiceImpl implements ClipEncoderService {
         }
         return v;
     }
-
 }

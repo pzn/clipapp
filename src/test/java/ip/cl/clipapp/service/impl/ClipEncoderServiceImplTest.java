@@ -29,5 +29,4 @@ public class ClipEncoderServiceImplTest {
         assertThat(clipEncoderService.encode(42), equalTo("Q"));
         assertThat(clipEncoderService.encode(1337), equalTo("vJ"));
     }
-
 }

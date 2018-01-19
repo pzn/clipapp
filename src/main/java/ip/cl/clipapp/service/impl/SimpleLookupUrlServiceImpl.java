@@ -13,18 +13,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-@Profile(ClipAppProfile.SIMPLE)
+import static ip.cl.clipapp.ClipAppProfile.SIMPLE;
+
+@Profile(SIMPLE)
 @Service
 public class SimpleLookupUrlServiceImpl implements LookupUrlService {
 
-    private AtomicInteger        counter = new AtomicInteger(1);
-    private Map<Integer, String> urlMap  = new ConcurrentHashMap<>();
+    private AtomicInteger counter = new AtomicInteger(1);
+    private Map<Integer, String> urlMap = new ConcurrentHashMap<>();
 
     @Autowired
-    private ClipEncoderService   clipEncoderService;
+    private ClipEncoderService clipEncoderService;
 
     @Override
     public String getOrAddLongUrl(String longUrl) {
+
         Integer key = findKey(longUrl);
         if (key == null) {
             String tinyUrl = addLongUrl(longUrl);
@@ -34,6 +37,7 @@ public class SimpleLookupUrlServiceImpl implements LookupUrlService {
     }
 
     private Integer findKey(String longUrl) {
+
         for (Entry<Integer, String> entry : urlMap.entrySet()) {
             if (entry.getValue().equals(longUrl)) {
                 return entry.getKey();
@@ -43,6 +47,7 @@ public class SimpleLookupUrlServiceImpl implements LookupUrlService {
     }
 
     private String addLongUrl(String longUrl) {
+
         Integer key = counter.getAndIncrement();
         urlMap.put(key, longUrl);
         return clipEncoderService.encode(key);
@@ -50,9 +55,9 @@ public class SimpleLookupUrlServiceImpl implements LookupUrlService {
 
     @Override
     public String getLongUrl(String tinyUrl) {
+
         int key = clipEncoderService.decode(tinyUrl);
         String longUrl = urlMap.get(key);
         return longUrl;
     }
-
 }

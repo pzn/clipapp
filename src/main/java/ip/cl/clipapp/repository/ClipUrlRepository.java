@@ -1,14 +1,14 @@
 package ip.cl.clipapp.repository;
 
-import ip.cl.clipapp.ClipAppProfile;
-import ip.cl.clipapp.model.ClipUrl;
-
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.repository.CrudRepository;
 
-@Profile(ClipAppProfile.DATABASE)
+import ip.cl.clipapp.model.ClipUrl;
+
+import static ip.cl.clipapp.ClipAppProfile.DATABASE;
+
+@Profile(DATABASE)
 public interface ClipUrlRepository extends CrudRepository<ClipUrl, Integer> {
 
     ClipUrl findByLongUrl(String longUrl);
-
 }

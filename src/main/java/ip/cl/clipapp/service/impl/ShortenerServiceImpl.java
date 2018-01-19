@@ -1,34 +1,30 @@
 package ip.cl.clipapp.service.impl;
 
-import ip.cl.clipapp.ClipAppRuntimeException;
-import ip.cl.clipapp.service.ClipEncoderService;
-import ip.cl.clipapp.service.LookupUrlService;
-import ip.cl.clipapp.service.ShortenerService;
-
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import ip.cl.clipapp.ClipAppRuntimeException;
+import ip.cl.clipapp.service.LookupUrlService;
+import ip.cl.clipapp.service.ShortenerService;
+
 @Service
 public class ShortenerServiceImpl implements ShortenerService {
 
-    private UrlValidator       urlValidator = new UrlValidator(new String[] { "http", "https" });
+    private UrlValidator urlValidator = new UrlValidator(new String[]{"http", "https"});
 
     @Autowired
-    private ClipEncoderService clipEncoderService;
-    @Autowired
-    private LookupUrlService   lookupUrlService;
+    private LookupUrlService lookupUrlService;
 
     @Override
     public String shorten(String longUrl) {
+
         Assert.hasText(longUrl);
         if (!urlValidator.isValid(longUrl)) {
             throw new ClipAppRuntimeException("url is invalid");
         }
 
-        String tinyUrl = lookupUrlService.getOrAddLongUrl(longUrl);
-
-        return tinyUrl;
+        return lookupUrlService.getOrAddLongUrl(longUrl);
     }
 }

@@ -11,7 +11,9 @@ import javax.persistence.Table;
 
 import org.springframework.context.annotation.Profile;
 
-@Profile(ClipAppProfile.DATABASE)
+import static ip.cl.clipapp.ClipAppProfile.DATABASE;
+
+@Profile(DATABASE)
 @Entity
 @Table(name = "clipurl")
 public class ClipUrl implements Serializable {
@@ -20,9 +22,9 @@ public class ClipUrl implements Serializable {
 
     @Id
     @GeneratedValue
-    private Integer           id;
+    private Integer id;
 
-    private String            longUrl;
+    private String longUrl;
 
     public Integer getId() {
         return id;
@@ -39,5 +41,4 @@ public class ClipUrl implements Serializable {
     public void setLongUrl(String longUrl) {
         this.longUrl = longUrl;
     }
-
 }
