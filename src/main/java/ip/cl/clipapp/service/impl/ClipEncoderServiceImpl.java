@@ -1,8 +1,11 @@
 package ip.cl.clipapp.service.impl;
 
+import org.springframework.stereotype.Service;
+
 import ip.cl.clipapp.service.ClipEncoderService;
 
-import org.springframework.stereotype.Service;
+import static org.springframework.util.Assert.hasText;
+import static org.springframework.util.Assert.isTrue;
 
 @Service
 public class ClipEncoderServiceImpl implements ClipEncoderService {
@@ -12,6 +15,8 @@ public class ClipEncoderServiceImpl implements ClipEncoderService {
 
     @Override
     public String encode(int v) {
+
+        isTrue(v > 0, "value cannot be zero or negative!");
 
         StringBuilder sb = new StringBuilder();
         while (v > 0) {
@@ -23,6 +28,8 @@ public class ClipEncoderServiceImpl implements ClipEncoderService {
 
     @Override
     public int decode(String str) {
+
+        hasText(str, "string cannot be null or empty!");
 
         int v = 0;
         char[] chars = str.toCharArray();
