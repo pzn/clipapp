@@ -2,6 +2,8 @@ package ip.cl.clipapp.service.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+
 import ip.cl.clipapp.Application;
 import ip.cl.clipapp.ClipAppException;
 import ip.cl.clipapp.service.ExtenderService;
@@ -17,18 +19,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 public class ExtenderServiceImplTest {
 
     @Autowired
-    private ShortenerService    shortenerService;
+    private ShortenerService shortenerService;
     @Autowired
-    private ExtenderService     extenderService;
+    private ExtenderService extenderService;
 
-    private static final String GOOGLE_COM       = "http://www.google.com";
+    private static final String GOOGLE_COM = "http://www.google.com";
     private static final String GOOGLE_COM_SHORT = "b";
-    private static final String GOOGLE_CA        = "http://www.google.ca";
-    private static final String GOOGLE_CA_SHORT  = "c";
+    private static final String GOOGLE_CA = "http://www.google.ca";
+    private static final String GOOGLE_CA_SHORT = "c";
 
     @Test
     public void extend() throws Exception {
@@ -51,5 +53,4 @@ public class ExtenderServiceImplTest {
     public void extendKO() throws Exception {
         extenderService.extend(GOOGLE_COM_SHORT);
     }
-
 }

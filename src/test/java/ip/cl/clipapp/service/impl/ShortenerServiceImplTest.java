@@ -2,6 +2,8 @@ package ip.cl.clipapp.service.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+
 import ip.cl.clipapp.Application;
 import ip.cl.clipapp.ClipAppRuntimeException;
 import ip.cl.clipapp.service.ShortenerService;
@@ -16,17 +18,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 public class ShortenerServiceImplTest {
 
-    private static final String GOOGLE_COM       = "http://www.google.com";
+    private static final String GOOGLE_COM = "http://www.google.com";
     private static final String GOOGLE_COM_SHORT = "b";
-    private static final String GOOGLE_CA        = "http://www.google.ca";
-    private static final String GOOGLE_CA_SHORT  = "c";
-    private static final String DRUNK_URL        = "grroL..qqqq,fiifkw,xim";
+    private static final String GOOGLE_CA = "http://www.google.ca";
+    private static final String GOOGLE_CA_SHORT = "c";
+    private static final String DRUNK_URL = "grroL..qqqq,fiifkw,xim";
 
     @Autowired
-    private ShortenerService    shortenerService;
+    private ShortenerService shortenerService;
 
     @Test
     public void shorten() {
@@ -45,5 +47,4 @@ public class ShortenerServiceImplTest {
     public void shortenKO() {
         shortenerService.shorten(DRUNK_URL);
     }
-
 }

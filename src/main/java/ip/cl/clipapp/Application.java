@@ -15,6 +15,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import static ip.cl.clipapp.ClipAppProfile.DATABASE;
+import static ip.cl.clipapp.ClipAppProfile.HEROKU;
+import static ip.cl.clipapp.ClipAppProfile.SIMPLE;
+
 @ComponentScan
 public class Application {
 
@@ -22,19 +26,19 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    @Profile(ClipAppProfile.SIMPLE)
+    @Profile(SIMPLE)
     @Configuration
     @EnableAutoConfiguration(exclude = { ErrorMvcAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
     public static class SimpleClipAppConfiguration {
 
     }
 
-    @Profile(ClipAppProfile.DATABASE)
+    @Profile(DATABASE)
     @Configuration
     @EnableAutoConfiguration(exclude = { ErrorMvcAutoConfiguration.class })
     public static class DbClipAppConfiguration {
 
-        @Profile(ClipAppProfile.HEROKU)
+        @Profile(HEROKU)
         @Bean
         public DataSource dataSource() throws URISyntaxException {
             URI dbUri = new URI(System.getenv("DATABASE_URL"));
@@ -51,5 +55,4 @@ public class Application {
                             .build();
         }
     }
-
 }

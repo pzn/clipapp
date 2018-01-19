@@ -2,6 +2,8 @@ package ip.cl.clipapp.web;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+
 import ip.cl.clipapp.Application;
 
 import org.junit.BeforeClass;
@@ -22,17 +24,17 @@ import org.springframework.web.client.RestTemplate;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @WebIntegrationTest("server.port:0")
 public class ClipControllerTest {
 
-    private static final String GOOGLE_COM       = "http://www.google.com";
+    private static final String GOOGLE_COM = "http://www.google.com";
     private static final String GOOGLE_COM_SHORT = "b";
 
     @Value("${local.server.port}")
     private int port;
-    
-    private static final MultiValueMap<String, Object> PARAM_MAP = new LinkedMultiValueMap<>(1); 
+
+    private static final MultiValueMap<String, Object> PARAM_MAP = new LinkedMultiValueMap<>(1);
     private final RestTemplate REST_TEMPLATE = new RestTemplate();
 
     @BeforeClass
@@ -40,11 +42,11 @@ public class ClipControllerTest {
         PARAM_MAP.add("u", GOOGLE_COM);
     }
 
-	@Test
-	public void clipUrl() {
-	    ResponseEntity<String> response = REST_TEMPLATE.postForEntity("http://localhost:" + port, PARAM_MAP, String.class);
-		assertThat(response.getBody(), equalTo(GOOGLE_COM_SHORT));
-	}
+    @Test
+    public void clipUrl() {
+        ResponseEntity<String> response = REST_TEMPLATE.postForEntity("http://localhost:" + port, PARAM_MAP, String.class);
+        assertThat(response.getBody(), equalTo(GOOGLE_COM_SHORT));
+    }
 
     @Test
     public void unclipUrl() {

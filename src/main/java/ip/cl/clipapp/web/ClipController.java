@@ -1,9 +1,5 @@
 package ip.cl.clipapp.web;
 
-import ip.cl.clipapp.ClipAppException;
-import ip.cl.clipapp.service.ExtenderService;
-import ip.cl.clipapp.service.ShortenerService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -15,6 +11,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import ip.cl.clipapp.ClipAppException;
+import ip.cl.clipapp.service.ExtenderService;
+import ip.cl.clipapp.service.ShortenerService;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 @Controller
 public class ClipController {
 
@@ -23,9 +25,9 @@ public class ClipController {
     @Autowired
     private ShortenerService shortenerService;
     @Autowired
-    private ExtenderService  extenderService;
+    private ExtenderService extenderService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = GET)
     public String index(ModelMap modelMap) {
         modelMap.putIfAbsent(TINY_URL_PARAM, "");
         return "index";
@@ -41,17 +43,15 @@ public class ClipController {
         return extenderService.extend(tinyUrl);
     }
 
-    @RequestMapping(value = "{tinyUrl}", method = RequestMethod.GET)
+    @RequestMapping(value = "{tinyUrl}", method = GET)
     public ModelAndView redirect(@PathVariable("tinyUrl") String tinyUrl, RedirectAttributes redirectAttrs) throws ClipAppException {
-        String longUrl = null;
+
         try {
-            longUrl = extenderService.extend(tinyUrl);
-        }
-        catch (ClipAppException e) {
+            String longUrl = extenderService.extend(tinyUrl);
+            return new ModelAndView("redirect:" + longUrl);
+        } catch (ClipAppException e) {
             redirectAttrs.addFlashAttribute(TINY_URL_PARAM, tinyUrl);
             return new ModelAndView("redirect:/");
         }
-        return new ModelAndView("redirect:" + longUrl);
     }
-
 }

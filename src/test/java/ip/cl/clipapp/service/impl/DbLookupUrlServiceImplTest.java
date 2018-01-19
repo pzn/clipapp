@@ -1,9 +1,12 @@
 package ip.cl.clipapp.service.impl;
 
+import static ip.cl.clipapp.ClipAppProfile.DATABASE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+
 import ip.cl.clipapp.Application;
 import ip.cl.clipapp.ClipAppProfile;
 import ip.cl.clipapp.service.LookupUrlService;
@@ -17,19 +20,19 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@ActiveProfiles({ ClipAppProfile.DATABASE })
+@ActiveProfiles({DATABASE})
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 public class DbLookupUrlServiceImplTest {
 
-    private static final String GOOGLE_COM       = "http://www.google.com";
+    private static final String GOOGLE_COM = "http://www.google.com";
     private static final String GOOGLE_COM_SHORT = "b";
-    private static final String GOOGLE_CA        = "http://www.google.ca";
-    private static final String GOOGLE_CA_SHORT  = "c";
+    private static final String GOOGLE_CA = "http://www.google.ca";
+    private static final String GOOGLE_CA_SHORT = "c";
 
     @Autowired
-    private LookupUrlService    lookupUrlService;
+    private LookupUrlService lookupUrlService;
 
     @Test
     public void getOrAddLongUrl() {
@@ -54,5 +57,4 @@ public class DbLookupUrlServiceImplTest {
     public void getLongUrlKO() {
         assertThat(lookupUrlService.getLongUrl(GOOGLE_COM_SHORT), is(nullValue()));
     }
-
 }
