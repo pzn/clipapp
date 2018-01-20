@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import ip.cl.clipapp.ClipAppException;
+import ip.cl.clipapp.TinyUrlNotFoundException;
 import ip.cl.clipapp.service.ExtenderService;
 import ip.cl.clipapp.service.ShortenerService;
 
@@ -39,17 +39,18 @@ public class ClipController {
     }
 
     @RequestMapping(value = "{tinyUrl}", method = RequestMethod.POST)
-    public @ResponseBody String unclip(@PathVariable("tinyUrl") String tinyUrl) throws ClipAppException {
+    public @ResponseBody String unclip(@PathVariable("tinyUrl") String tinyUrl) throws TinyUrlNotFoundException {
         return extenderService.extend(tinyUrl);
     }
 
     @RequestMapping(value = "{tinyUrl}", method = GET)
-    public ModelAndView redirect(@PathVariable("tinyUrl") String tinyUrl, RedirectAttributes redirectAttrs) throws ClipAppException {
+    public ModelAndView redirect(@PathVariable("tinyUrl") String tinyUrl, RedirectAttributes redirectAttrs) throws TinyUrlNotFoundException {
 
         try {
             String longUrl = extenderService.extend(tinyUrl);
             return new ModelAndView("redirect:" + longUrl);
-        } catch (ClipAppException e) {
+
+        } catch (TinyUrlNotFoundException e) {
             redirectAttrs.addFlashAttribute(TINY_URL_PARAM, tinyUrl);
             return new ModelAndView("redirect:/");
         }

@@ -1,75 +1,115 @@
 package ip.cl.clipapp.web;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
-
-import ip.cl.clipapp.Application;
-
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@WebIntegrationTest("server.port:0")
+import ip.cl.clipapp.TinyUrlNotFoundException;
+import ip.cl.clipapp.service.ExtenderService;
+import ip.cl.clipapp.service.ShortenerService;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+
+@RunWith(MockitoJUnitRunner.class)
 public class ClipControllerTest {
 
     private static final String GOOGLE_COM = "http://www.google.com";
-    private static final String GOOGLE_COM_SHORT = "b";
+    private static final String ENCODED_GOOGLE_COM = "polopopo";
 
-    @Value("${local.server.port}")
-    private int port;
+    private MockMvc mockMvc;
 
-    private static final MultiValueMap<String, Object> PARAM_MAP = new LinkedMultiValueMap<>(1);
-    private final RestTemplate REST_TEMPLATE = new RestTemplate();
+    @InjectMocks
+    private ClipController clipController;
+    @Mock
+    private ShortenerService mockedShortenerService;
+    @Mock
+    private ExtenderService mockedExtenderService;
 
-    @BeforeClass
-    public static void beforeClass() {
-        PARAM_MAP.add("u", GOOGLE_COM);
+    @Before
+    public void before() {
+        mockMvc = standaloneSetup(clipController).build();
     }
 
     @Test
-    public void clipUrl() {
-        ResponseEntity<String> response = REST_TEMPLATE.postForEntity("http://localhost:" + port, PARAM_MAP, String.class);
-        assertThat(response.getBody(), equalTo(GOOGLE_COM_SHORT));
+    public void can_clip_long_url() throws Exception {
+
+        // Given
+        given(mockedShortenerService.shorten(GOOGLE_COM))
+                .willReturn(ENCODED_GOOGLE_COM);
+
+        // Execute
+        mockMvc.perform(post("/").param("u", GOOGLE_COM))
+                // Verify
+                .andExpect(status().isOk())
+                .andExpect(content().string(ENCODED_GOOGLE_COM));
     }
 
     @Test
-    public void unclipUrl() {
-        // Add URL
-        REST_TEMPLATE.postForEntity("http://localhost:" + port, PARAM_MAP, String.class);
-        // Now the URL exists
-        // We can retrieve it
-        ResponseEntity<String> response = REST_TEMPLATE.postForEntity("http://localhost:" + port + "/" + GOOGLE_COM_SHORT, null, String.class);
-        assertThat(response.getBody(), equalTo(GOOGLE_COM));
-    }
+    public void can_unclip_tiny_url() throws Exception {
 
-    @Test(expected = HttpServerErrorException.class)
-    public void unclipUrlNotFound() {
-        // This time, we won't add the URL
-        ResponseEntity<String> response = REST_TEMPLATE.postForEntity("http://localhost:" + port + "/" + GOOGLE_COM_SHORT, null, String.class);
-        // Error excepted
-        response.getBody();
+        // Given
+        given(mockedExtenderService.extend(ENCODED_GOOGLE_COM))
+                .willReturn(GOOGLE_COM);
+
+        // Execute
+        mockMvc.perform(post("/" + ENCODED_GOOGLE_COM))
+                // Verify
+                .andExpect(status().isOk())
+                .andExpect(content().string(GOOGLE_COM));
     }
 
     @Test
-    public void index() {
-        ResponseEntity<String> response = REST_TEMPLATE.getForEntity("http://localhost:" + port, String.class);
-        assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
+    public void when_cannot_unclip_tiny_url__should_return_404() throws Exception {
+
+        // Given
+        doThrow(TinyUrlNotFoundException.class)
+                .when(mockedExtenderService).extend(any());
+
+        // Execute
+        mockMvc.perform(post("/any-tiny-url"))
+                // Verify
+                .andExpect(status().isNotFound());
     }
 
+    @Test
+    public void can_redirect() throws Exception {
+
+        // Given
+        when(mockedExtenderService.extend("hlowurl"))
+                .thenReturn("https://hello.world");
+
+        // Execute
+        mockMvc.perform(get("/hlowurl"))
+                // Verify
+                .andExpect(status().isFound())
+                .andExpect(header().string("location", is("https://hello.world")));
+    }
+
+    @Test
+    public void when_cannot_redirect_tiny_url__should_redirect_to_root() throws Exception {
+
+        // Given
+        doThrow(TinyUrlNotFoundException.class)
+                .when(mockedExtenderService).extend("tiny-url-not-found");
+
+        // Execute
+        mockMvc.perform(get("/tiny-url-not-found"))
+                // Verify
+                .andExpect(status().isFound())
+                .andExpect(header().string("location", is("/")));
+    }
 }
