@@ -1,14 +1,12 @@
 package ip.cl.clipapp.service.impl;
 
-import ip.cl.clipapp.ClipAppException;
-import ip.cl.clipapp.service.ClipEncoderService;
-import ip.cl.clipapp.service.ExtenderService;
-import ip.cl.clipapp.service.LookupUrlService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import ip.cl.clipapp.TinyUrlNotFoundException;
+import ip.cl.clipapp.service.ExtenderService;
+import ip.cl.clipapp.service.LookupUrlService;
 
 import static org.springframework.util.Assert.hasText;
 
@@ -16,20 +14,17 @@ import static org.springframework.util.Assert.hasText;
 public class ExtenderServiceImpl implements ExtenderService {
 
     @Autowired
-    private ClipEncoderService clipEncoderService;
-    @Autowired
     private LookupUrlService lookupUrlService;
 
     @Override
-    public String extend(String tinyUrl) throws ClipAppException {
+    public String extend(String tinyUrl) throws TinyUrlNotFoundException {
 
-        hasText(tinyUrl);
+        hasText(tinyUrl, "tiny url cannot be null or empty!");
 
         String longUrl = lookupUrlService.getLongUrl(tinyUrl);
         if (!StringUtils.hasText(longUrl)) {
-            throw new ClipAppException("url not found");
+            throw new TinyUrlNotFoundException();
         }
-
         return longUrl;
     }
 }
