@@ -1,50 +1,139 @@
 package ip.cl.clipapp.service.impl;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
-
-import ip.cl.clipapp.Application;
-import ip.cl.clipapp.ClipAppRuntimeException;
-import ip.cl.clipapp.service.ShortenerService;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+import ip.cl.clipapp.service.LookupUrlService;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
+@RunWith(MockitoJUnitRunner.class)
 public class ShortenerServiceImplTest {
 
-    private static final String GOOGLE_COM = "http://www.google.com";
-    private static final String GOOGLE_COM_SHORT = "b";
-    private static final String GOOGLE_CA = "http://www.google.ca";
-    private static final String GOOGLE_CA_SHORT = "c";
-    private static final String DRUNK_URL = "grroL..qqqq,fiifkw,xim";
+    private static final String HTTPS_URL = "https://www.google.com";
+    private static final String HTTP_URL = "http://www.nooooooooooooooo.com";
+    private static final String DRUNK_URL = "drunk://grroL..qqqq,fiifkw,xim";
+    private static final String TINY_URL = "ijklmnop";
 
-    @Autowired
-    private ShortenerService shortenerService;
+    @InjectMocks
+    private ShortenerServiceImpl shortenerServiceImpl;
+    @Mock
+    private LookupUrlService mockedLookupUrlService;
 
     @Test
-    public void shorten() {
-        assertThat(shortenerService.shorten(GOOGLE_COM), equalTo(GOOGLE_COM_SHORT));
-        assertThat(shortenerService.shorten(GOOGLE_CA), equalTo(GOOGLE_CA_SHORT));
+    public void can_shorten_https() throws Exception {
+
+        // Given
+        givenLookupUrlServiceReturns(HTTPS_URL, TINY_URL);
+
+        // Execute
+        String tinyUrl = shortenerServiceImpl.shorten(HTTPS_URL);
+
+        // Verify
+        assertThat(tinyUrl, equalTo(TINY_URL));
+        verifyInteractions(HTTPS_URL, 1);
     }
 
     @Test
-    public void shortenTwice() {
-        assertThat(shortenerService.shorten(GOOGLE_COM), equalTo(GOOGLE_COM_SHORT));
-        // Must return the same value
-        assertThat(shortenerService.shorten(GOOGLE_COM), equalTo(GOOGLE_COM_SHORT));
+    public void can_shorten_http() throws Exception {
+
+        // Given
+        givenLookupUrlServiceReturns(HTTP_URL, TINY_URL);
+
+        // Execute
+        String tinyUrlForHttp = shortenerServiceImpl.shorten(HTTP_URL);
+
+        // Verify
+        assertThat(tinyUrlForHttp, equalTo(TINY_URL));
+        verifyInteractions(HTTP_URL, 1);
     }
 
-    @Test(expected = ClipAppRuntimeException.class)
-    public void shortenKO() {
-        shortenerService.shorten(DRUNK_URL);
+    @Test
+    public void can_shorten_url_twice() throws Exception {
+
+        // Given
+        givenLookupUrlServiceReturns(HTTPS_URL, TINY_URL);
+
+        // Execute
+        String firstTime = shortenerServiceImpl.shorten(HTTPS_URL);
+        String secondTime = shortenerServiceImpl.shorten(HTTPS_URL);
+
+        // Verify
+        assertThat(firstTime, equalTo(TINY_URL));
+        assertThat(firstTime, equalTo(secondTime));
+        verifyInteractions(HTTPS_URL, 2);
+    }
+
+    @Test
+    public void when_long_url_is_null__should_throw_exception() throws Exception {
+
+        // Execute
+        try {
+            shortenerServiceImpl.shorten(null);
+        } catch (Exception e) {
+
+            // Verify
+            assertThat(e, is(instanceOf(IllegalArgumentException.class)));
+            verifyZeroInteractions();
+            return;
+        }
+        fail("exception expected!");
+    }
+
+    @Test
+    public void when_long_url_is_empty__should_throw_exception() throws Exception {
+
+        // Execute
+        try {
+            shortenerServiceImpl.shorten("");
+        } catch (Exception e) {
+
+            // Verify
+            assertThat(e, is(instanceOf(IllegalArgumentException.class)));
+            verifyZeroInteractions();
+            return;
+        }
+        fail("exception expected!");
+    }
+
+    @Test
+    public void when_long_url_uses_an_unrecognized_scheme__should_throw_exception() throws Exception {
+
+        // Execute
+        try {
+            shortenerServiceImpl.shorten(DRUNK_URL);
+        } catch (Exception e) {
+
+            // Verify
+            assertThat(e, is(instanceOf(IllegalArgumentException.class)));
+            verifyZeroInteractions();
+            return;
+        }
+        fail("exception expected!");
+    }
+
+    private void givenLookupUrlServiceReturns(String longUrl, String tinyUrl) {
+        when(mockedLookupUrlService.getOrAddLongUrl(longUrl))
+                .thenReturn(tinyUrl);
+    }
+
+    private void verifyZeroInteractions() {
+        verifyInteractions(null, 0);
+    }
+
+    private void verifyInteractions(String longUrl, int times) {
+        verify(mockedLookupUrlService, times(times)).getOrAddLongUrl(longUrl);
+        verifyNoMoreInteractions(mockedLookupUrlService);
     }
 }
