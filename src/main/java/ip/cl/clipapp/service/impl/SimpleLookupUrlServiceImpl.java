@@ -1,17 +1,16 @@
 package ip.cl.clipapp.service.impl;
 
-import ip.cl.clipapp.ClipAppProfile;
-import ip.cl.clipapp.service.ClipEncoderService;
-import ip.cl.clipapp.service.LookupUrlService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
+import ip.cl.clipapp.service.ClipEncoderService;
+import ip.cl.clipapp.service.LookupUrlService;
 
 import static ip.cl.clipapp.ClipAppProfile.SIMPLE;
 

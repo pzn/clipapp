@@ -1,60 +1,89 @@
 package ip.cl.clipapp.service.impl;
 
-import static ip.cl.clipapp.ClipAppProfile.SIMPLE;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import ip.cl.clipapp.service.ClipEncoderService;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+import static org.mockito.Mockito.when;
 
-import ip.cl.clipapp.Application;
-import ip.cl.clipapp.ClipAppProfile;
-import ip.cl.clipapp.service.LookupUrlService;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-@ActiveProfiles({SIMPLE})
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+@RunWith(MockitoJUnitRunner.class)
 public class SimpleLookupUrlServiceImplTest {
 
-    private static final String GOOGLE_COM = "http://www.google.com";
-    private static final String GOOGLE_COM_SHORT = "b";
-    private static final String GOOGLE_CA = "http://www.google.ca";
-    private static final String GOOGLE_CA_SHORT = "c";
+    private static final int ID = 1;
+    private static final String GOOGLE_COM = "https://www.google.com";
+    private static final String ENCODED_GOOGLE_COM = "meow";
 
-    @Autowired
-    private LookupUrlService lookupUrlService;
+    @InjectMocks
+    private SimpleLookupUrlServiceImpl lookupUrlService;
+    @Mock
+    private ClipEncoderService mockedClipEncoderService;
 
     @Test
-    public void getOrAddLongUrl() {
-        assertThat(lookupUrlService.getOrAddLongUrl(GOOGLE_COM), equalTo(GOOGLE_COM_SHORT));
-        assertThat(lookupUrlService.getOrAddLongUrl(GOOGLE_CA), equalTo(GOOGLE_CA_SHORT));
+    public void can_add_long_url() {
+
+        // Given
+        when(mockedClipEncoderService.encode(ID))
+                .thenReturn(ENCODED_GOOGLE_COM);
+
+        // Execute
+        String tinyUrl = lookupUrlService.getOrAddLongUrl(GOOGLE_COM);
+
+        // Verify
+        assertThat(tinyUrl, equalTo(ENCODED_GOOGLE_COM));
     }
 
     @Test
-    public void getOrAddLongUrlTwice() {
-        assertThat(lookupUrlService.getOrAddLongUrl(GOOGLE_COM), equalTo(GOOGLE_COM_SHORT));
-        // Must return the same value
-        assertThat(lookupUrlService.getOrAddLongUrl(GOOGLE_COM), equalTo(GOOGLE_COM_SHORT));
+    public void can_add_url_twice_and_expect_same_short_url_version() {
+
+        // Given
+        when(mockedClipEncoderService.encode(ID))
+                .thenReturn(ENCODED_GOOGLE_COM);
+
+        // Execute
+        String firstTime = lookupUrlService.getOrAddLongUrl(GOOGLE_COM);
+        String secondTime = lookupUrlService.getOrAddLongUrl(GOOGLE_COM);
+
+        // Verify
+        assertThat(firstTime, equalTo(ENCODED_GOOGLE_COM));
+        assertThat(firstTime, equalTo(secondTime));
     }
 
     @Test
-    public void getLongUrl() {
-        assertThat(lookupUrlService.getOrAddLongUrl(GOOGLE_COM), equalTo(GOOGLE_COM_SHORT));
-        assertThat(lookupUrlService.getLongUrl(GOOGLE_COM_SHORT), equalTo(GOOGLE_COM));
+    public void can_get_long_url() {
+
+        // Given
+        when(mockedClipEncoderService.encode(ID))
+                .thenReturn(ENCODED_GOOGLE_COM);
+        when(mockedClipEncoderService.decode(ENCODED_GOOGLE_COM))
+                .thenReturn(ID);
+        String tinyUrl = lookupUrlService.getOrAddLongUrl(GOOGLE_COM);
+
+        // Execute
+        String longUrl = lookupUrlService.getLongUrl(tinyUrl);
+
+        // Verify
+        assertThat(longUrl, equalTo(GOOGLE_COM));
     }
 
     @Test
-    public void getLongUrlKO() {
-        assertThat(lookupUrlService.getLongUrl(GOOGLE_COM_SHORT), is(nullValue()));
+    public void when_short_url_does_not_exist__should_return_null() {
+
+        // Given
+        when(mockedClipEncoderService.encode(ID))
+                .thenReturn(null);
+
+        // Execute
+        String tinyUrlNotFound = lookupUrlService.getLongUrl(ENCODED_GOOGLE_COM);
+
+        // Verify
+        assertThat(tinyUrlNotFound, is(nullValue()));
     }
 }
