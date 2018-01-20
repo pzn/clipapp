@@ -26,6 +26,15 @@ public class ClipUrl implements Serializable {
 
     private String longUrl;
 
+    public ClipUrl() {
+
+    }
+
+    public ClipUrl(Integer id, String longUrl) {
+        this.id = id;
+        this.longUrl = longUrl;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -1,16 +1,15 @@
 package ip.cl.clipapp.service.impl;
 
-import ip.cl.clipapp.ClipAppProfile;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+
 import ip.cl.clipapp.model.ClipUrl;
 import ip.cl.clipapp.repository.ClipUrlRepository;
 import ip.cl.clipapp.service.ClipEncoderService;
 import ip.cl.clipapp.service.LookupUrlService;
-
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
 import static ip.cl.clipapp.ClipAppProfile.DATABASE;
 
