@@ -1,24 +1,35 @@
-# http://docs.spring.io/spring-boot/docs/1.2.5.RELEASE/reference/html/common-application-properties.html
+# http://docs.spring.io/spring-boot/docs/1.5.9.RELEASE/reference/html/common-application-properties.html
 spring:
-  main:
-    show_banner: false
   mvc:
     locale: en_US
-  profiles:
-    active: simple
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration
+logging:
+  level:
+    ROOT: INFO
+    org.hibernate: ERROR
+---
+spring:
+  profiles: simple
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+---
+spring:
+  profiles: database,heroku
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+---
+spring:
+  profiles: database
   datasource:
     platform: postgresql
     url: jdbc:postgresql://localhost:5432/clipapp
-    username: postgres
-    password: postgres
+    username: clipapp
+    password: clipapp
     driver-class-name: org.postgresql.Driver
-logging:
-  level:
-    org:
-      springframework: ERROR
-    ip:
-      cl: ERROR

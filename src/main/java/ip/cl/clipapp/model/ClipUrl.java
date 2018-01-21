@@ -1,6 +1,6 @@
 package ip.cl.clipapp.model;
 
-import ip.cl.clipapp.ClipAppProfile;
+import org.springframework.context.annotation.Profile;
 
 import java.io.Serializable;
 
@@ -9,21 +9,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.springframework.context.annotation.Profile;
+import lombok.Data;
 
 import static ip.cl.clipapp.ClipAppProfile.DATABASE;
 
 @Profile(DATABASE)
 @Entity
 @Table(name = "clipurl")
+@Data
 public class ClipUrl implements Serializable {
-
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue
     private Integer id;
-
     private String longUrl;
 
     public ClipUrl() {
@@ -32,22 +30,6 @@ public class ClipUrl implements Serializable {
 
     public ClipUrl(Integer id, String longUrl) {
         this.id = id;
-        this.longUrl = longUrl;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getLongUrl() {
-        return longUrl;
-    }
-
-    public void setLongUrl(String longUrl) {
         this.longUrl = longUrl;
     }
 }
