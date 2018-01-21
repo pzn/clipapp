@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-import ip.cl.clipapp.model.ClipUrl;
+import ip.cl.clipapp.model.entity.ClipUrl;
 import ip.cl.clipapp.repository.ClipUrlRepository;
 import ip.cl.clipapp.service.ClipEncoderService;
 import ip.cl.clipapp.service.LookupUrlService;

@@ -17,10 +17,12 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -55,7 +57,8 @@ public class ClipControllerTest {
         mockMvc.perform(post("/").param("u", GOOGLE_COM))
                 // Verify
                 .andExpect(status().isOk())
-                .andExpect(content().string(ENCODED_GOOGLE_COM));
+                .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
+                .andExpect(jsonPath("$.value", is(ENCODED_GOOGLE_COM)));
     }
 
     @Test
@@ -69,7 +72,8 @@ public class ClipControllerTest {
         mockMvc.perform(post("/" + ENCODED_GOOGLE_COM))
                 // Verify
                 .andExpect(status().isOk())
-                .andExpect(content().string(GOOGLE_COM));
+                .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
+                .andExpect(jsonPath("$.url", is(GOOGLE_COM)));
     }
 
     @Test

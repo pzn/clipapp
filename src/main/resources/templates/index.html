@@ -56,7 +56,7 @@
 			}).done(function(data) {
 				$('#tinyUrlStatus').css('color', 'green');
 				$('#tinyUrlStatus').text('Here you go.');
-				$('#tinyUrl').val(window.location + data);
+				$('#tinyUrl').val(window.location + data.value);
 			});
 		});
 
@@ -75,7 +75,7 @@
 			}).done(function(data) {
 				$('#longUrlStatus').css('color', 'green');
 				$('#longUrlStatus').text('Here you go.');
-				$('#longUrl').val(data);
+				$('#longUrl').val(data.url);
 			});
 		});
 	});
