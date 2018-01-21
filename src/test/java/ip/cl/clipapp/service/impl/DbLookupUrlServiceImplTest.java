@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import ip.cl.clipapp.model.ClipUrl;
+import ip.cl.clipapp.model.entity.ClipUrl;
 import ip.cl.clipapp.repository.ClipUrlRepository;
 import ip.cl.clipapp.service.ClipEncoderService;
 

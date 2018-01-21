@@ -16,14 +16,25 @@ http://clipapp.herokuapp.com
 
 # POST
 - http://clipapp.herokuapp.com/{TINY_URL}: outputs the original URL if existing, otherwise throws an error.
+```json
+{
+  "url": "https://www.google.ca"
+}
+```
+
 - http://clipapp.herokuapp.com/?u={LONG_URL}: outputs a tiny URL. If already available in the system, it gives the already associated tiny URL. If long URL malformed, throws an error.
+```json
+{
+  "value": "jfcnsie"
+}
+```
 
 launch it locally?
 ==================
 ## prerequisites
 - jdk8
 - maven
-- postgresql 9.4.x, with database *clipapp* created
+- postgresql 10.x, with database *clipapp* created
 
 ## how to
 - git clone this repository

@@ -1,4 +1,4 @@
-package ip.cl.clipapp.model;
+package ip.cl.clipapp.model.entity;
 
 import org.springframework.context.annotation.Profile;
 

@@ -3,7 +3,7 @@ package ip.cl.clipapp.repository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.repository.CrudRepository;
 
-import ip.cl.clipapp.model.ClipUrl;
+import ip.cl.clipapp.model.entity.ClipUrl;
 
 import static ip.cl.clipapp.ClipAppProfile.DATABASE;
 
