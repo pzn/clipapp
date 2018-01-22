@@ -12,6 +12,8 @@ logging:
 ---
 spring:
   profiles: simple
+  cache:
+    type: none
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
@@ -20,6 +22,8 @@ spring:
 ---
 spring:
   profiles: database,heroku
+  cache:
+    type: simple
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -33,3 +37,11 @@ spring:
     username: clipapp
     password: clipapp
     driver-class-name: org.postgresql.Driver
+---
+spring:
+  profiles: redis-caching
+  cache:
+    type: redis
+  redis:
+    host: localhost
+    port: 6379

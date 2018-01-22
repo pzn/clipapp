@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-
 import ip.cl.clipapp.model.entity.ClipUrl;
 import ip.cl.clipapp.repository.ClipUrlRepository;
 import ip.cl.clipapp.service.ClipEncoderService;
@@ -15,7 +13,6 @@ import static ip.cl.clipapp.ClipAppProfile.DATABASE;
 
 @Profile(DATABASE)
 @Service
-@Transactional
 public class DbLookupUrlServiceImpl implements LookupUrlService {
 
     @Autowired
