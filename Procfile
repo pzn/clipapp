@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -Dspring.profiles.active=database,heroku -jar target/clipapp-0.0.1-SNAPSHOT.jar
+web: java -Dserver.port=$PORT -Dspring.profiles.active=database,redis-caching,heroku -jar target/clipapp-0.0.1-SNAPSHOT.jar

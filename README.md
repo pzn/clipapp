@@ -32,14 +32,11 @@ http://clipapp.herokuapp.com
 launch it locally?
 ==================
 ## prerequisites
-- jdk8
+- jdk8+
 - maven
-- postgresql 10.x, with database *clipapp* created
+- postgresql 10.x, with database *clipapp* created (optional, for data persistance: use Spring profile `database`)
+- redis (optional, for caching: use Spring profile `redis-caching`)
 
 ## how to
 - git clone this repository
-- mvn spring-boot:run -Dspring.profiles.active=database
-
-improvements
-============
-- merge 'hazelcast' branch
+- mvn spring-boot:run -Dspring.profiles.active=database,redis-caching
