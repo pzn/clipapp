@@ -5,13 +5,15 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.HSQLDialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
   datasource:
     platform: hsqldb
     url: jdbc:hsqldb:mem:clipapptest
     username: sa
     password: sa
     driver-class-name: org.hsqldb.jdbcDriver
+flyway:
+  enabled: false
 logging:
   level:
     ROOT: INFO

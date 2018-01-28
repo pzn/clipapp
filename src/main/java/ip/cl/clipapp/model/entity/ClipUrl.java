@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import lombok.Data;
 
 import static ip.cl.clipapp.ClipAppProfile.DATABASE;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Profile(DATABASE)
 @Entity
@@ -20,7 +21,7 @@ import static ip.cl.clipapp.ClipAppProfile.DATABASE;
 public class ClipUrl implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private Integer id;
     private String longUrl;
 
